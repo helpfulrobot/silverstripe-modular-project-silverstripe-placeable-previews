@@ -1,0 +1,5 @@
+---
+Name: silverstripe-placeable-previews
+Page:
+  extensions:
+    - PreviewPageExtension
