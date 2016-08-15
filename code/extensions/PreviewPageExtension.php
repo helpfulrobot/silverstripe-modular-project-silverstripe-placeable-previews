@@ -41,10 +41,18 @@ class PreviewPageExtension extends DataExtension
         $fields->addFieldsToTab(
             'Root.Preview',
             array(
-                UploadField::create('PreviewImage','Image'),
-                TextareaField::create('PreviewSummary','Summary')
-                    ->setRows(3),
-                TextField::create('PreviewMore','More')
+                UploadField::create(
+                    'PreviewImage',
+                    _t('PlaceablePreviewLink.IMAGE', 'Image')
+                ),
+                TextareaField::create(
+                    'PreviewSummary',
+                    _t('PlaceablePreviewLink.SUMMARY', 'Summary')
+                )->setRows(3),
+                TextField::create(
+                    'PreviewMore',
+                    _t('PlaceablePreviewLink.MORE', 'More')
+                )
             )
         );
         return $fields;

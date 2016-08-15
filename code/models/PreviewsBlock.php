@@ -38,16 +38,13 @@ class PreviewsBlock extends BlockObject
     public function getCMSPageFields()
     {
         $fields = parent::getCMSPageFields();
-        $fields->addFieldsToTab(
-            'Root.Main',
-            array(
-                GridField::create(
-                    'CustomPreviews',
-                    _t('Placeable.PREVIEWS', 'Preview(s)')
-                    $this->Previews(),
-                    GridFieldConfig_RelationEditor::create()
-                        ->addComponent(new GridFieldOrderableRows())
-                )
+        $fields->push(
+            GridField::create(
+                'CustomPreviews',
+                _t('PreviewsBlock.PREVIEWS', 'Preview(s)'),
+                $this->CustomPreviews(),
+                GridFieldConfig_RelationEditor::create()
+                    ->addComponent(new GridFieldOrderableRows())
             )
         );
         $this->extend('updateCMSPageFields', $fields);
@@ -119,25 +116,25 @@ class PreviewsBlock_Preset extends BlockObject_Preset
                     'PreviewType',
                     'Type',
                     array(
-                        "currentchildren" => "List all sub pages of this page",
-                        "children" => "Specify a page and list all its sub pages",
-                        "custom" => "Specify each link"
+                        'currentchildren' => _t('PreviewsBlock.CURRENTCHILDREN', 'List all sub pages of this page'),
+                        'children' => _t('PreviewsBlock.CHILDREN', 'Specify a page and list all its sub pages'),
+                        'custom' => _t('PreviewsBlock.CUSTOM', 'Specify each link'),
                     )
                 ),
                 DisplayLogicWrapper::create(
                     TreeDropdownField::create(
                         'ParentPageID',
-                        'Select a page',
+                        _t('PreviewsBlock.SELECTAPAGE', 'Select a page'),
                         'SiteTree'
                     )
                 )->displayIf("LinkType")->isEqualTo("children")->end(),
                 DisplayLogicWrapper::create(
                     NumericField::create(
                         'PreviewLimit',
-                        'Preview links'
+                        _t('PreviewsBlock.LIMITLINKS', 'Limit links')
                     )
-                    ->setDescription("0 equals unlimited amount.")
-                )->displayIf("LinkType")->isNotEqualTo("custom")->end()
+                    ->setDescription(_t('PreviewsBlock.LIMITLINKSDESCRIPTION', '0 equals unlimited amount.'))
+                )->displayIf('LinkType')->isNotEqualTo('custom')->end()
             )
         );
         return $fields;

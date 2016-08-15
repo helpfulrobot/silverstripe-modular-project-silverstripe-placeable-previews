@@ -2,7 +2,7 @@
   "name": "silverstripe-modular-project/silverstripe-placeable-previews",
   "description": "Silverstripe previews",
   "type": "silverstripe-module",
-  "keywords": ["silverstripe", "modular", "sections"],
+  "keywords": ["silverstripe", "modular", "regions"],
   "license": "BSD-3-Clause",
   "authors": [
     {
