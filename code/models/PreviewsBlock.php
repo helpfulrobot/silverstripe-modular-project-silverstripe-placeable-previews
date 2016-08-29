@@ -88,12 +88,6 @@ class PreviewsBlock_Controller extends BlockObject_Controller
 class PreviewsBlock_Preset extends BlockObject_Preset
 {
     /**
-     * Singular name for CMS
-     * @var string
-     */
-    private static $singular_name = 'Previews/Teasers Preset';
-
-    /**
      * Database fields
      * @var array
      */
