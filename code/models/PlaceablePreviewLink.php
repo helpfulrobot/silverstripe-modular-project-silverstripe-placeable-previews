@@ -8,6 +8,18 @@
 class PlaceablePreviewLink extends Link
 {
     /**
+     * Singular name for CMS
+     * @var string
+     */
+    private static $singular_name = 'Preview/Teaser';
+
+    /**
+     * Plural name for CMS
+     * @var string
+     */
+    private static $plural_name = 'Previews/Teasers';
+
+    /**
      * Database fields
      * @var array
      */
@@ -30,14 +42,6 @@ class PlaceablePreviewLink extends Link
      */
     private static $defaults = array(
         'PreviewMore' => 'Read more'
-    );
-
-    /**
-     * Define extensions
-     * @var array
-     */
-    private static $extensions = array(
-        'Versioned("Stage","Live")'
     );
 
     /**

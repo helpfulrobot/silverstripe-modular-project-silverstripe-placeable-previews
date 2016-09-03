@@ -18,7 +18,7 @@ class PreviewsBlock extends BlockObject
      * @var array
      */
     private static $many_many = array(
-        'CustomPreviews' => 'PreviewLink',
+        'CustomPreviews' => 'PlaceablePreviewLink',
     );
 
     /**
@@ -38,15 +38,19 @@ class PreviewsBlock extends BlockObject
     public function getCMSPageFields()
     {
         $fields = parent::getCMSPageFields();
-        $fields->push(
-            GridField::create(
-                'CustomPreviews',
-                _t('PreviewsBlock.PREVIEWS', 'Preview(s)'),
-                $this->CustomPreviews(),
-                GridFieldConfig_RelationEditor::create()
-                    ->addComponent(new GridFieldOrderableRows())
-            )
-        );
+        if ($this->Preset()->PreviewType == 'custom') {
+            $fields->addFields(
+                array(
+                    GridField::create(
+                        'CustomPreviews',
+                        _t('PreviewsBlock.PREVIEWS', 'Preview(s)'),
+                        $this->CustomPreviews(),
+                        GridFieldConfig_RelationEditor::create()
+                            ->addComponent(new GridFieldOrderableRows())
+                    )
+                )
+            );
+        }
         $this->extend('updateCMSPageFields', $fields);
         return $fields;
     }
@@ -57,26 +61,19 @@ class PreviewsBlock extends BlockObject
      */
     public function Previews()
     {
-        $currentPage = Director::get_current_page();
-        switch ($this->LinkType) {
+        switch ($this->Preset()->PreviewType) {
             case 'custom':
-                return $this->CustomPreviews()->sort('Sort ASC');
-            case 'children':
-                return $this
-                    ->ParentPage()
-                    ->Children()
-                    ->Limit($this->LinkLimit)
-                    ->Exclude(
-                        array(
-                            "ID" => $currentPage->ID
-                        )
-                    );
+                $links = $this->CustomPreviews()->sort('Sort ASC');
+                break;
+            case 'specifiedchildren':
+                $links = $this->Preset()->ParentPage()->Children();
+                break;
             case 'currentchildren':
             default:
-                return $currentPage
-                    ->Children()
-                    ->Limit($this->LinkLimit);
+                $links = Director::get_current_page()->Children();
+                break;
         }
+        return $links->Limit($this->Preset()->LinkLimit);
     }
 }
 class PreviewsBlock_Controller extends BlockObject_Controller
@@ -92,7 +89,7 @@ class PreviewsBlock_Preset extends BlockObject_Preset
      * @var array
      */
     private static $db = array(
-        'PreviewType' => 'Enum("currentchildren,custom,children", "currentchildren")',
+        'PreviewType' => 'Enum("currentchildren,custom,specifiedchildren", "currentchildren")',
         'PreviewLimit' => 'Int'
     );
 
@@ -111,8 +108,8 @@ class PreviewsBlock_Preset extends BlockObject_Preset
                     'Type',
                     array(
                         'currentchildren' => _t('PreviewsBlock.CURRENTCHILDREN', 'List all sub pages of this page'),
-                        'children' => _t('PreviewsBlock.CHILDREN', 'Specify a page and list all its sub pages'),
-                        'custom' => _t('PreviewsBlock.CUSTOM', 'Specify each link'),
+                        'specifiedchildren' => _t('PreviewsBlock.SPECIFIEDCHILDREN', 'Specify a page and list all its sub pages'),
+                        'custom' => _t('PreviewsBlock.CUSTOM', 'Specify each preview/teaser on the page'),
                     )
                 ),
                 DisplayLogicWrapper::create(
@@ -122,13 +119,11 @@ class PreviewsBlock_Preset extends BlockObject_Preset
                         'SiteTree'
                     )
                 )->displayIf("LinkType")->isEqualTo("children")->end(),
-                DisplayLogicWrapper::create(
-                    NumericField::create(
-                        'PreviewLimit',
-                        _t('PreviewsBlock.LIMITLINKS', 'Limit links')
-                    )
-                    ->setDescription(_t('PreviewsBlock.LIMITLINKSDESCRIPTION', '0 equals unlimited amount.'))
-                )->displayIf('LinkType')->isNotEqualTo('custom')->end()
+                NumericField::create(
+                    'PreviewLimit',
+                    _t('PreviewsBlock.LIMITPREVIEWS', 'Limit previews')
+                )
+                ->setDescription(_t('PreviewsBlock.LIMITPREVIEWSDESCRIPTION', '0 equals unlimited amount.'))
             )
         );
         return $fields;
