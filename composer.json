@@ -1,6 +1,6 @@
 {
   "name": "silverstripe-modular-project/silverstripe-placeable-previews",
-  "description": "Silverstripe previews",
+  "description": "Silverstripe placeable sub module to provide preview, teaser or call to actions",
   "type": "silverstripe-module",
   "keywords": ["silverstripe", "modular", "regions"],
   "license": "BSD-3-Clause",
