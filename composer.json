@@ -14,8 +14,8 @@
   {
     "silverstripe/framework": "^3.2",
     "silverstripe/cms": "^3.2",
-    "silverstripe-modular-project/silverstripe-placeable": "1.*",
-    "sheadawson/silverstripe-linkable": "^1.2"
+    "silverstripe-modular-project/silverstripe-placeable": "dev-master",
+    "sheadawson/silverstripe-linkable": "^1.4"
   },
   "extra": {
     "installer-name": "placeable-previews"
